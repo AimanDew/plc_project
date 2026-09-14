@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+
+# Databases / logs
+*.db
+logs/
+*.log
+
+# Data exports (regenerable / machine-local)
+*.csv
+*.pdf
+
+# Separate cloned repo - manage independently
+frappe_docker/
+
+# Local config with environment-specific settings
+opencode.json
+
+# Contains live API credentials - use erp_config.sample.json as template
+Omron_PLC_AI/erp_config.json

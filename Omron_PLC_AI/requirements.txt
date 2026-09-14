@@ -1,0 +1,11 @@
+mcp==2.1.1
+mcp-types==2.1.1
+starlette==1.6.0
+uvicorn==0.52.4
+fins-driver==0.3.1
+pywin32==312
+pydantic==2.13.5
+sse-starlette==3.4.11
+openpyxl==3.1.5
+pyOpenSSL==26.4.0
+PyJWT==2.13.0
