@@ -1,0 +1,604 @@
+{
+  "workstations": [
+    {
+      "name": "WS-OEE-001",
+      "workstation_name": "WS-OEE-001",
+      "description": "Omron NX1P2 training rig used for OEE pilot",
+      "production_capacity": 30,
+      "hour_rate": 0.0,
+      "working_hours": [
+        {
+          "start_time": "8:00:00",
+          "end_time": "16:00:00",
+          "enabled": 1
+        },
+        {
+          "start_time": "8:00:00",
+          "end_time": "16:00:00",
+          "enabled": 1
+        },
+        {
+          "start_time": "8:00:00",
+          "end_time": "16:00:00",
+          "enabled": 1
+        },
+        {
+          "start_time": "8:00:00",
+          "end_time": "16:00:00",
+          "enabled": 1
+        },
+        {
+          "start_time": "8:00:00",
+          "end_time": "16:00:00",
+          "enabled": 1
+        },
+        {
+          "start_time": "8:00:00",
+          "end_time": "16:00:00",
+          "enabled": 1
+        }
+      ]
+    }
+  ],
+  "plc_tags": [
+    {
+      "name": "Mode Auto Man",
+      "tag_name": "Mode Auto Man",
+      "fins_address": "W406.1",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "0: AUTO / 1: MAN",
+      "active": 1
+    },
+    {
+      "name": "Mode DG OEE",
+      "tag_name": "Mode DG OEE",
+      "fins_address": "W406.0",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "0: DG / 1: OEE",
+      "active": 1
+    },
+    {
+      "name": "Counter Display",
+      "tag_name": "Counter Display",
+      "fins_address": "W404",
+      "data_type": "int",
+      "workstation": "WS-OEE-001",
+      "comment": "Cycle counter",
+      "active": 1
+    },
+    {
+      "name": "NG Count",
+      "tag_name": "NG Count",
+      "fins_address": "W402",
+      "data_type": "int",
+      "workstation": "WS-OEE-001",
+      "comment": "NG count (bad parts)",
+      "active": 1
+    },
+    {
+      "name": "OK Count",
+      "tag_name": "OK Count",
+      "fins_address": "W400",
+      "data_type": "int",
+      "workstation": "WS-OEE-001",
+      "comment": "OK count (good parts)",
+      "active": 1
+    },
+    {
+      "name": "Temp RTD2",
+      "tag_name": "Temp RTD2",
+      "fins_address": "W302",
+      "data_type": "dint",
+      "workstation": "WS-OEE-001",
+      "comment": "Temperature RTD2 (DINT, 2 words)",
+      "active": 1
+    },
+    {
+      "name": "Temp RTD1",
+      "tag_name": "Temp RTD1",
+      "fins_address": "W300",
+      "data_type": "dint",
+      "workstation": "WS-OEE-001",
+      "comment": "Temperature RTD1 (DINT, 2 words)",
+      "active": 1
+    },
+    {
+      "name": "Operation Indicator",
+      "tag_name": "Operation Indicator",
+      "fins_address": "W200.9",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Operation indicator (OFF = DG/ ON = OEE)",
+      "active": 1
+    },
+    {
+      "name": "TL Red",
+      "tag_name": "TL Red",
+      "fins_address": "W200.8",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Red tower light",
+      "active": 1
+    },
+    {
+      "name": "TL Yellow",
+      "tag_name": "TL Yellow",
+      "fins_address": "W200.7",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Yellow tower light",
+      "active": 1
+    },
+    {
+      "name": "TL Green",
+      "tag_name": "TL Green",
+      "fins_address": "W200.6",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Green tower light",
+      "active": 1
+    },
+    {
+      "name": "K3 Peltier",
+      "tag_name": "K3 Peltier",
+      "fins_address": "W200.5",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Output 3 (Peltier Heater / Motor Speed)",
+      "active": 1
+    },
+    {
+      "name": "K2 Large Fan",
+      "tag_name": "K2 Large Fan",
+      "fins_address": "W200.4",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Output 2 (Large Fan / Motor Direction)",
+      "active": 1
+    },
+    {
+      "name": "K1 Small Fan",
+      "tag_name": "K1 Small Fan",
+      "fins_address": "W200.3",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Output 1 (Small Fan / Motor Operation)",
+      "active": 1
+    },
+    {
+      "name": "LED GREEN",
+      "tag_name": "LED GREEN",
+      "fins_address": "W200.2",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "GREEN LED",
+      "active": 1
+    },
+    {
+      "name": "LED YELLOW",
+      "tag_name": "LED YELLOW",
+      "fins_address": "W200.1",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "YELLOW LED",
+      "active": 1
+    },
+    {
+      "name": "LED RED",
+      "tag_name": "LED RED",
+      "fins_address": "W200.0",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "RED LED",
+      "active": 1
+    },
+    {
+      "name": "Emergency Stop",
+      "tag_name": "Emergency Stop",
+      "fins_address": "W100.9",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Emergency Stop (HW:= NC)",
+      "active": 1
+    },
+    {
+      "name": "Part Reject Sensor",
+      "tag_name": "Part Reject Sensor",
+      "fins_address": "W100.8",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Part Reject Sensor (HW:= Inductive)",
+      "active": 1
+    },
+    {
+      "name": "Photo Sensor 1",
+      "tag_name": "Photo Sensor 1",
+      "fins_address": "W100.7",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Photo Sensor 1",
+      "active": 1
+    },
+    {
+      "name": "Photo Sensor 2",
+      "tag_name": "Photo Sensor 2",
+      "fins_address": "W100.6",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Photo Sensor 2",
+      "active": 1
+    },
+    {
+      "name": "Photo Sensor 3",
+      "tag_name": "Photo Sensor 3",
+      "fins_address": "W100.5",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Photo Sensor 3",
+      "active": 1
+    },
+    {
+      "name": "Operation Selector",
+      "tag_name": "Operation Selector",
+      "fins_address": "W100.4",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Operation Selector (0:= DG / 1:= OEE)",
+      "active": 1
+    },
+    {
+      "name": "Reset",
+      "tag_name": "Reset",
+      "fins_address": "W100.3",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Reset (HW := NO / PB Yellow)",
+      "active": 1
+    },
+    {
+      "name": "Start",
+      "tag_name": "Start",
+      "fins_address": "W100.2",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Start (HW:= NO / PB Green)",
+      "active": 1
+    },
+    {
+      "name": "Stop",
+      "tag_name": "Stop",
+      "fins_address": "W100.1",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Stop (HW:= NC / PB Red)",
+      "active": 1
+    },
+    {
+      "name": "Mode Selector",
+      "tag_name": "Mode Selector",
+      "fins_address": "W100.0",
+      "data_type": "bool",
+      "workstation": "WS-OEE-001",
+      "comment": "Mode Selector (0:= Auto / 1:= Man)",
+      "active": 1
+    }
+  ],
+  "machine_events": [
+    {
+      "name": "ME-2026-00016",
+      "event_type": "state_transition",
+      "source_uuid": "c5500058-a6c2-44b8-9500-0e54e74cbb49",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:27:18.931320",
+      "state": "IDLE",
+      "reason": "No active signals",
+      "duration_sec": 7.221685,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00015",
+      "event_type": "state_transition",
+      "source_uuid": "31bd17f8-a54a-4c19-9798-5ea674eb26cd",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:27:11.709635",
+      "state": "OFFLINE",
+      "reason": "Not in OEE mode (DG mode selected)",
+      "duration_sec": 4.736564,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00014",
+      "event_type": "downtime_event",
+      "source_uuid": "53ebb519-0125-41cc-9495-06c3251cc1b0",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:27:06.973071",
+      "state": null,
+      "reason": "No active signals",
+      "duration_sec": 2.432001,
+      "payload": "{\"start_time\": \"2026-09-11T16:27:04.541070\", \"end_time\": \"2026-09-11T16:27:06.973071\"}"
+    },
+    {
+      "name": "ME-2026-00013",
+      "event_type": "state_transition",
+      "source_uuid": "c5177a32-fa87-460f-b14a-253ddce8a724",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:27:06.973071",
+      "state": "IDLE",
+      "reason": "No active signals",
+      "duration_sec": 2.432001,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00012",
+      "event_type": "state_transition",
+      "source_uuid": "49b4ef76-c8d7-44cc-adb6-4fd5ffbfb109",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:27:04.541070",
+      "state": "DOWN",
+      "reason": "Emergency Stop pressed",
+      "duration_sec": 456.035696,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00011",
+      "event_type": "state_transition",
+      "source_uuid": "3844c7e3-cee3-4c9f-9c03-61180ee5697c",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:19:28.505374",
+      "state": "IDLE",
+      "reason": "No active signals",
+      "duration_sec": 4.700139,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00010",
+      "event_type": "state_transition",
+      "source_uuid": "a11c83dc-d706-483b-b247-8e08959dce03",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:19:23.805235",
+      "state": "RUNNING",
+      "reason": null,
+      "duration_sec": 119.910104,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00009",
+      "event_type": "state_transition",
+      "source_uuid": "96c59483-72c3-4818-9dc9-b3ce9c29013b",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 16:17:23.895131",
+      "state": "IDLE",
+      "reason": "No active signals",
+      "duration_sec": 0.0,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00008",
+      "event_type": "oee_result",
+      "source_uuid": "63ec59fd-6c80-416f-886e-7921fd7611d5",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 15:16:22.252979",
+      "state": "OEE",
+      "reason": "periodic calculation",
+      "duration_sec": 0.0,
+      "payload": "{\"period_start\": \"2026-09-11T07:16:22.252979\", \"period_end\": \"2026-09-11T15:16:22.252979\", \"standards_source\": \"erp\", \"planned_time_min\": 436.37088298333333, \"run_time_min\": 436.37088298333333, \"downtime_min\": 0.0, \"total_count\": 0, \"good_count\": 0, \"reject_count\": 0, \"ideal_cycle_time_sec\": 1.99999998, \"availability\": 1.0, \"performance\": 0.0, \"quality\": 1.0, \"oee\": 0.0, \"availability_pct\": 100.0, \"performance_pct\": 0.0, \"quality_pct\": 100.0, \"oee_pct\": 0.0}"
+    },
+    {
+      "name": "ME-2026-00007",
+      "event_type": "state_transition",
+      "source_uuid": "bb74259f-2614-4fe3-b35f-ab38541394fa",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": "PO-JOB00001",
+      "event_timestamp": "2026-09-11 14:49:01.701869",
+      "state": "RUNNING",
+      "reason": "first plan-context event (WO/JC linked)",
+      "duration_sec": 33.3,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00006",
+      "event_type": "state_transition",
+      "source_uuid": "36a862c7-cd2c-497d-9473-a1b9a18f5c93",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": null,
+      "event_timestamp": "2026-09-10 16:32:14.098240",
+      "state": "IDLE",
+      "reason": "master-data linkage e2e test",
+      "duration_sec": 7.5,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00005",
+      "event_type": "reject_event",
+      "source_uuid": "c4190664-3dd5-4f9e-b4e7-91a8010aa406",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": null,
+      "event_timestamp": "2026-09-09 16:11:11.236215",
+      "state": null,
+      "reason": null,
+      "duration_sec": 0.0,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00004",
+      "event_type": "downtime_event",
+      "source_uuid": "3153e966-68eb-4c07-9744-27acd064ceaa",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": null,
+      "event_timestamp": "2026-09-09 16:11:11.236215",
+      "state": null,
+      "reason": "E-stop pressed (e2e logger hook test)",
+      "duration_sec": 125.5,
+      "payload": "{\"start_time\": \"2026-09-09T16:11:11.236215\", \"end_time\": \"2026-09-09T16:11:11.236215\"}"
+    },
+    {
+      "name": "ME-2026-00003",
+      "event_type": "state_transition",
+      "source_uuid": "cebde385-5811-474c-8979-a3ad05f61c19",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": null,
+      "event_timestamp": "2026-09-09 16:11:11.236215",
+      "state": "DOWN",
+      "reason": "E-stop pressed (e2e logger hook test)",
+      "duration_sec": 0.0,
+      "payload": null
+    },
+    {
+      "name": "ME-2026-00002",
+      "event_type": "state_transition",
+      "source_uuid": "1d173ac6-1319-4988-8e63-ff0e6aeb48fb",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": null,
+      "event_timestamp": "2026-09-09 16:08:00.702944",
+      "state": "RUNNING",
+      "reason": "e2e verification",
+      "duration_sec": 42.0,
+      "payload": "{\"source\": \"e2e_test\"}"
+    },
+    {
+      "name": "ME-2026-00001",
+      "event_type": "smoke_test",
+      "source_uuid": "test-uuid-0001",
+      "machine_unit": "OEE",
+      "workstation": "WS-OEE-001",
+      "job_card": null,
+      "event_timestamp": "2026-09-09 10:00:00",
+      "state": "RUNNING",
+      "reason": "manual smoke test",
+      "duration_sec": 12.5,
+      "payload": "{\"hello\":\"world\"}"
+    }
+  ],
+  "boms": [
+    {
+      "name": "BOM-TRAINING-WIDGET-002",
+      "item": "TRAINING-WIDGET",
+      "docstatus": 1,
+      "is_active": 1,
+      "is_default": 1
+    },
+    {
+      "name": "BOM-TRAINING-WIDGET-001",
+      "item": "TRAINING-WIDGET",
+      "docstatus": 2,
+      "is_active": 0,
+      "is_default": 0
+    }
+  ],
+  "bom_operations": [
+    {
+      "parent": "BOM-TRAINING-WIDGET-002",
+      "operation": "Assemble",
+      "workstation": "WS-OEE-001",
+      "time_in_mins": 0.033333333
+    }
+  ],
+  "work_orders": [
+    {
+      "name": "MFG-WO-2026-00001",
+      "production_item": "TRAINING-WIDGET",
+      "bom_no": "BOM-TRAINING-WIDGET-002",
+      "qty": 100.0,
+      "produced_qty": 0.0,
+      "status": "Not Started",
+      "fg_warehouse": "Finished Goods - W"
+    }
+  ],
+  "job_cards": [
+    {
+      "name": "PO-JOB00001",
+      "work_order": "MFG-WO-2026-00001",
+      "operation": "Assemble",
+      "workstation": "WS-OEE-001",
+      "status": "Work In Progress",
+      "total_time_in_mins": 0.0
+    }
+  ],
+  "operations": [
+    {
+      "name": "Assemble",
+      "workstation": "WS-OEE-001"
+    },
+    {
+      "name": "Assembly",
+      "workstation": null
+    }
+  ],
+  "items": [
+    {
+      "item_code": "WIDGET-BASE",
+      "item_name": "Widget Base Part",
+      "stock_uom": "Unit",
+      "is_stock_item": 1
+    },
+    {
+      "item_code": "TRAINING-WIDGET",
+      "item_name": "Training Widget",
+      "stock_uom": "Unit",
+      "is_stock_item": 1
+    }
+  ],
+  "site_info": {
+    "site": "frontend",
+    "companies": [
+      {
+        "name": "w3ffwf",
+        "abbr": "W",
+        "company_name": "w3ffwf"
+      }
+    ],
+    "warehouses": [
+      {
+        "name": "Goods In Transit - W",
+        "company": "w3ffwf",
+        "is_group": 0
+      },
+      {
+        "name": "Finished Goods - W",
+        "company": "w3ffwf",
+        "is_group": 0
+      },
+      {
+        "name": "Work In Progress - W",
+        "company": "w3ffwf",
+        "is_group": 0
+      },
+      {
+        "name": "Stores - W",
+        "company": "w3ffwf",
+        "is_group": 0
+      },
+      {
+        "name": "All Warehouses - W",
+        "company": "w3ffwf",
+        "is_group": 1
+      }
+    ]
+  }
+}
