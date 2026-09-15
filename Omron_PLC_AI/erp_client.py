@@ -113,11 +113,13 @@ class ERPClient:
 
     def update_doc(self, doctype, name, fields):
 
-        body = {"fields": fields}
-        path = "/api/resource/{}/{}".format(
-            urllib.parse.quote(doctype), urllib.parse.quote(str(name))
-        )
-        return self._request("PUT", path, body=body)
+        # PUT .../<doctype>/<name> with {"fields": {...}} silently drops
+        # child-table updates on some doctypes (e.g. Job Card) - go through
+        # frappe.client.save instead, which runs the real doc.save() path.
+        doc = self.get_doc(doctype, name)
+        data = doc.get("data", doc) if isinstance(doc, dict) else doc
+        data.update(fields)
+        return self._request("POST", "/api/method/frappe.client.save", body={"doc": json.dumps(data)})
 
     def delete_doc(self, doctype, name):
 
@@ -132,23 +134,30 @@ class ERPClient:
 
     def submit_doc(self, doctype, name):
 
-        return self._request(
-            "PUT",
-            "/api/resource/{}/{}".format(
-                urllib.parse.quote(doctype), urllib.parse.quote(str(name))
-            ),
-            body={"action": "submit"}
-        )
+        # PUT .../<doctype>/<name> with {"action": "submit"} is a silent no-op -
+        # docstatus transitions must go through frappe.client.submit/cancel,
+        # which actually calls doc.submit()/doc.cancel().
+        doc = self.get_doc(doctype, name)
+        data = doc.get("data", doc) if isinstance(doc, dict) else doc
+        # doc goes in the POST body, not query params - a full doc (child
+        # tables included) routinely exceeds the request-line length limit.
+        return self._request("POST", "/api/method/frappe.client.submit", body={"doc": json.dumps(data)})
 
     def cancel_doc(self, doctype, name):
 
         return self._request(
-            "PUT",
-            "/api/resource/{}/{}".format(
-                urllib.parse.quote(doctype), urllib.parse.quote(str(name))
-            ),
-            body={"action": "cancel"}
+            "POST",
+            "/api/method/frappe.client.cancel",
+            body={"doctype": doctype, "name": str(name)}
         )
+
+    def save_doc(self, data):
+
+        # For edits too large/complex for update_doc's field-patch shortcut
+        # (e.g. child tables it silently drops on some doctypes) - takes a
+        # full doc dict (as returned by get_doc/call_method) and saves it
+        # through the same path the Desk UI uses.
+        return self._request("POST", "/api/method/frappe.client.save", body={"doc": json.dumps(data)})
 
     # ------------------------------------------------------------------
     # whitelisted method calls ( /api/method/... )
