@@ -1,0 +1,21 @@
+{
+  "description": "Fabricated tag map for a Mitsubishi-style assembly line. Not from real hardware - no Mitsubishi PLC exists in this project. Built to demonstrate a structurally distinct vendor addressing scheme (MELSEC device codes: X/Y inputs-outputs, M internal relays, D data registers) alongside the real Siemens map and the real Omron FINS map, for the fabricated multi-workstation sequencing prototype.",
+  "protocol": "MC",
+  "tags": {
+    "MITSU Mode Auto Man":  { "address": "M0",   "type": "bool", "comment": "0 = Auto, 1 = Manual" },
+    "MITSU Start PB":       { "address": "X0",   "type": "bool", "comment": "Start pushbutton, NO" },
+    "MITSU Stop PB":        { "address": "X1",   "type": "bool", "comment": "Stop pushbutton, NC" },
+    "MITSU E-Stop":         { "address": "X2",   "type": "bool", "comment": "Emergency-stop loop" },
+    "MITSU Part Present":   { "address": "X3",   "type": "bool", "comment": "Photoeye - part at station" },
+    "MITSU Running":        { "address": "M10",  "type": "bool", "comment": "Internal relay - line running" },
+    "MITSU Fault":          { "address": "M11",  "type": "bool", "comment": "Internal relay - fault latched" },
+    "MITSU Cycle Complete": { "address": "M20",  "type": "bool", "comment": "Rising edge = one cycle finished" },
+    "MITSU Conveyor Run":   { "address": "Y0",   "type": "bool", "comment": "Conveyor motor output" },
+    "MITSU Reject Pusher":  { "address": "Y1",   "type": "bool", "comment": "Reject-pusher solenoid output" },
+    "MITSU OK Count":       { "address": "D100", "type": "int",  "comment": "Cumulative good-part count" },
+    "MITSU NG Count":       { "address": "D101", "type": "int",  "comment": "Cumulative reject count" },
+    "MITSU Cycle Time ms":  { "address": "D102", "type": "int",  "comment": "Last cycle time, milliseconds" },
+    "MITSU Step ID":        { "address": "D110", "type": "int",  "comment": "Current sequence step number" },
+    "MITSU Target Rate":    { "address": "D120", "type": "int",  "comment": "Target units/hour, operator-set" }
+  }
+}
