@@ -3,10 +3,13 @@ import sys
 import time
 from datetime import datetime
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.dirname(HERE))
 
 from db_schema import get_config, set_config, get_latest_count
 from erp_client import ERPClient, ERPClientError
+from erp_common import builders, plumbing
 
 
 # Demo fabrication: hardcoded rather than read from the BOM/Work Order.
@@ -78,18 +81,14 @@ def create_manufacture_stock_entry(client, qty):
         "erpnext.manufacturing.doctype.work_order.work_order.make_stock_entry",
         params={"work_order_id": WORK_ORDER, "purpose": "Manufacture", "qty": qty}
     )
-    doc = result.get("message", result)
+    doc = plumbing.unwrap(result)
     doc["doctype"] = "Stock Entry"
     doc["process_loss_qty"] = 0
     doc["items"] = [i for i in doc.get("items", []) if not i.get("is_finished_item")]
-    doc["items"].append({
-        "item_code": FG_ITEM, "qty": qty, "t_warehouse": FG_WAREHOUSE,
-        "is_finished_item": 1, "basic_rate": DEMO_RATE,
-        "uom": "Unit", "stock_uom": "Unit", "conversion_factor": 1.0
-    })
+    doc["items"].append(builders.stock_entry_fg_row(FG_ITEM, qty, FG_WAREHOUSE, DEMO_RATE))
 
     saved = client.save_doc(doc)
-    data = saved.get("message", saved)
+    data = plumbing.unwrap(saved)
     name = data["name"]
 
     client.submit_doc("Stock Entry", name)

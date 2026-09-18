@@ -9,13 +9,21 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from erp_client import ERPClient, ERPClientError
 
 
-# The two custom DocTypes that, per project history, exist only as live
-# schema - rebuilt by hand on each ERPNext instance, never checked in.
-# This is the whole list this tool knows how to track; add a name here
-# once it has a JSON file under erp_schema/doctypes/.
-TRACKED_DOCTYPES = ["Machine Event", "PLC Tag"]
+# Schema-only customizations that, per project history, exist only as live
+# schema - rebuilt by hand on each ERPNext instance, never checked in. Each
+# entry is (meta_doctype, name): meta_doctype is the doctype the object
+# itself is stored as ("DocType" for a whole custom doctype, "Custom Field"
+# for a field bolted onto a standard one); name is that record's own name.
+# This is the whole list this tool knows how to track; add an entry here
+# once it has a JSON file under erp_schema/.
+TRACKED = [
+    ("DocType", "Machine Event"),
+    ("DocType", "PLC Tag"),
+    ("Custom Field", "Work Order-custom_priority"),
+]
 
-SCHEMA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "erp_schema", "doctypes")
+BASE_SCHEMA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "erp_schema")
+SCHEMA_SUBDIR = {"DocType": "doctypes", "Custom Field": "custom_fields"}
 
 # Per-instance/per-save metadata that carries no schema meaning - stripped
 # before comparing or writing to the repo, so a diff only ever shows an
@@ -41,62 +49,64 @@ def normalize(doc):
     return json.dumps(strip_volatile(data), indent=2, sort_keys=True) + "\n"
 
 
-def tracked_path(doctype):
+def tracked_path(meta_doctype, name):
 
-    return os.path.join(SCHEMA_DIR, doctype + ".json")
+    subdir = SCHEMA_SUBDIR[meta_doctype]
+    return os.path.join(BASE_SCHEMA_DIR, subdir, name + ".json")
 
 
-def fetch_live(client, doctype):
+def fetch_live(client, meta_doctype, name):
 
     try:
-        return client.get_doc("DocType", doctype)
+        return client.get_doc(meta_doctype, name)
     except ERPClientError as e:
         if e.status_code == 404:
             return None
         raise
 
 
-def cmd_export(client, doctypes):
+def cmd_export(client, items):
 
-    os.makedirs(SCHEMA_DIR, exist_ok=True)
-    for dt in doctypes:
-        live = fetch_live(client, dt)
+    for meta_doctype, name in items:
+        os.makedirs(os.path.join(BASE_SCHEMA_DIR, SCHEMA_SUBDIR[meta_doctype]), exist_ok=True)
+        live = fetch_live(client, meta_doctype, name)
         if live is None:
-            print(f"  ! {dt}: does not exist on {client.base_url}, skipped")
+            print(f"  ! {name}: does not exist on {client.base_url}, skipped")
             continue
-        with open(tracked_path(dt), "w", encoding="utf-8") as f:
+        path = tracked_path(meta_doctype, name)
+        with open(path, "w", encoding="utf-8") as f:
             f.write(normalize(live))
-        print(f"  exported {dt} -> {tracked_path(dt)}")
+        print(f"  exported {name} -> {path}")
 
 
-def cmd_check(client, doctypes):
+def cmd_check(client, items):
 
     clean = True
-    for dt in doctypes:
-        path = tracked_path(dt)
+    for meta_doctype, name in items:
+        path = tracked_path(meta_doctype, name)
         if not os.path.exists(path):
-            print(f"  ? {dt}: not tracked yet (run `export` first)")
+            print(f"  ? {name}: not tracked yet (run `export` first)")
             clean = False
             continue
 
         with open(path, "r", encoding="utf-8") as f:
             tracked = f.read()
 
-        live = fetch_live(client, dt)
+        live = fetch_live(client, meta_doctype, name)
         if live is None:
-            print(f"  ! {dt}: tracked in repo but MISSING on {client.base_url}")
+            print(f"  ! {name}: tracked in repo but MISSING on {client.base_url}")
             clean = False
             continue
 
         live_norm = normalize(live)
         if tracked == live_norm:
-            print(f"  = {dt}: matches repo")
+            print(f"  = {name}: matches repo")
         else:
             clean = False
-            print(f"  x {dt}: DRIFTED from repo")
+            print(f"  x {name}: DRIFTED from repo")
             diff = difflib.unified_diff(
                 tracked.splitlines(), live_norm.splitlines(),
-                fromfile=f"repo/{dt}.json", tofile=f"live ({client.base_url})",
+                fromfile=f"repo/{name}.json", tofile=f"live ({client.base_url})",
                 lineterm=""
             )
             for line in diff:
@@ -105,35 +115,35 @@ def cmd_check(client, doctypes):
     return clean
 
 
-def cmd_apply(client, doctypes):
+def cmd_apply(client, items):
 
-    for dt in doctypes:
-        path = tracked_path(dt)
+    for meta_doctype, name in items:
+        path = tracked_path(meta_doctype, name)
         if not os.path.exists(path):
-            print(f"  ? {dt}: not tracked, nothing to apply")
+            print(f"  ? {name}: not tracked, nothing to apply")
             continue
 
         with open(path, "r", encoding="utf-8") as f:
             target = json.load(f)
 
-        live = fetch_live(client, dt)
+        live = fetch_live(client, meta_doctype, name)
         if live is None:
-            client.insert_doc("DocType", target)
-            print(f"  + {dt}: created on {client.base_url}")
+            client.insert_doc(meta_doctype, target)
+            print(f"  + {name}: created on {client.base_url}")
         else:
-            target["name"] = dt
+            target["name"] = name
             client.save_doc(target)
-            print(f"  ~ {dt}: updated on {client.base_url}")
+            print(f"  ~ {name}: updated on {client.base_url}")
 
 
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Version-control check/sync for custom ERPNext DocTypes "
-                    "(Machine Event, PLC Tag) against erp_schema/doctypes/."
+        description="Version-control check/sync for custom ERPNext schema "
+                    "objects (custom DocTypes and Custom Fields) against erp_schema/."
     )
     parser.add_argument("action", choices=["export", "check", "apply"])
-    parser.add_argument("doctypes", nargs="*", default=TRACKED_DOCTYPES)
+    parser.add_argument("names", nargs="*", help="filter TRACKED by name; default is all of it")
     parser.add_argument(
         "--config",
         help="path to an erp_config.json-shaped file. Default: whatever "
@@ -151,13 +161,15 @@ def main():
     client = ERPClient(config=config)
     print(f"target: {client.base_url}")
 
+    items = [t for t in TRACKED if t[1] in args.names] if args.names else TRACKED
+
     if args.action == "export":
-        cmd_export(client, args.doctypes)
+        cmd_export(client, items)
     elif args.action == "check":
-        clean = cmd_check(client, args.doctypes)
+        clean = cmd_check(client, items)
         sys.exit(0 if clean else 1)
     elif args.action == "apply":
-        cmd_apply(client, args.doctypes)
+        cmd_apply(client, items)
 
 
 if __name__ == "__main__":

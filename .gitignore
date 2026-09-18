@@ -24,6 +24,12 @@ opencode.json
 
 # Contains live API credentials - use erp_config.sample.json as template
 Omron_PLC_AI/erp_config.json
+# Contains the Agent identity's live API credentials - use
+# erp_config.agent.sample.json as template
+Omron_PLC_AI/erp_config.agent.json
+
+# Contains live API keys (e.g. GEMINI_API_KEY) - use .env.example as template
+.env
 # ERP handover backups contain site credentials - keep local only
 erpnext_handover/*.sql.gz
 erpnext_handover/*site_config_backup.json

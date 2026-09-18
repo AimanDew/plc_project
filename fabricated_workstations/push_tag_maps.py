@@ -3,9 +3,12 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(os.path.dirname(HERE), "Omron_PLC_AI"))
+PROJECT_ROOT = os.path.dirname(HERE)
+sys.path.insert(0, os.path.join(PROJECT_ROOT, "Omron_PLC_AI"))
+sys.path.insert(0, PROJECT_ROOT)
 
 from erp_client import ERPClient, ERPClientError
+from erp_common import builders, plumbing
 
 
 # The real, hardware-verified Siemens map (session history: verified against
@@ -69,10 +72,7 @@ def ensure_workstation(client, name):
     except ERPClientError as e:
         if e.status_code != 404:
             raise
-        client.insert_doc("Workstation", {
-            "workstation_name": name,
-            "__newname": name,
-        })
+        client.insert_doc("Workstation", builders.workstation(name))
         print(f"  Workstation {name} created")
 
 
@@ -87,7 +87,7 @@ def push_tags(client, tags, workstation, protocol, dry_run=False):
             result = client.get_doc_list(
                 "PLC Tag", filters=[["tag_name", "=", tag_name]], limit=1
             )
-            data = result["data"] if isinstance(result, dict) and "data" in result else result
+            data = plumbing.unwrap(result)
             existing = data[0] if data else None
         except ERPClientError:
             existing = None
@@ -101,15 +101,11 @@ def push_tags(client, tags, workstation, protocol, dry_run=False):
             skipped += 1
             continue
 
-        fields = {
-            "tag_name": tag_name,
-            "protocol": protocol,
-            "address": info["address"],
-            "data_type": info["type"],
-            "workstation": workstation,
-            "comment": info.get("comment", ""),
-            "active": 1,
-        }
+        fields = builders.plc_tag(
+            tag_name=tag_name, protocol=protocol, address=info["address"],
+            data_type=info["type"], workstation=workstation,
+            comment=info.get("comment", ""),
+        )
 
         if dry_run:
             action = "update" if existing else "create"

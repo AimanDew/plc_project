@@ -10,7 +10,12 @@ CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "erp_conf
 
 def load_config():
 
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+    # ERP_CONFIG_PATH lets a script (or a shell env) swap which identity
+    # ERPClient() authenticates as - e.g. erp_config.agent.json, so
+    # fabricated/trial-run writes are attributed to the Agent user in the
+    # Desk UI instead of Administrator - without touching call sites.
+    path = os.environ.get("ERP_CONFIG_PATH", CONFIG_PATH)
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
